@@ -1,0 +1,15 @@
+Package: qualtricks
+Title: Convenience Functions for Qualtrics Site Intercept API
+Version: 0.0.0.9000
+Authors@R: person("Amanda", "Ludden", email = "", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+Depends: R (>= 3.4.3),
+  dplyr,
+  tidyr,
+  httr,
+  jsonlite,
+  RSelenium
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
