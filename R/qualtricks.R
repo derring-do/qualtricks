@@ -1,22 +1,10 @@
 #' INTERNAL: Check for requisite .Renviron variables; alert if missing
-#'
-#' @param var
-#'
-#' @return
-#' @export
-#'
-#' @examples
 #' @keywords internal
 checkRenviron <- function(var) {
   if(Sys.getenv(var) == "") { stop(paste0("You need to add ", var, "to .Renviron (and start a new session after doing so)"))  }
 }
 
 #' INTERNAL: Log in to Qualtrics from institutional URL
-#'
-#' @return
-#' @export
-#'
-#' @examples
 #' @keywords internal
 qualtricsLogin <- function() {
   checkRenviron("QUALTRICS_LOGIN_URL")
@@ -41,16 +29,17 @@ qualtricsLogin <- function() {
 
 
 #' Scrape Qualtrics Site Intercept creative ids and names for use in API call
+#'
 #' Uses Experience Management UI
 #'
 #' @param creativeHomeURL URL for creative project list on legacy UI; defaults to .Renviron
 #' @param cssSelector CSS Selector matching an individual creative
 #' @param script Path to text file containing JavaScript to execute on page to wrangle the creatives into an array
 #'
-#' @return data.frame called creatives and data.frame called intercepts
+#' @return data.frame
 #' @export
 #'
-#' @examples
+#' @examples listCreatives()
 
 listCreatives <- function(creativeHomeURL = Sys.getenv("CREATIVE_HOME_URL"),
                           cssSelector = "tr[creatives='creatives']",
@@ -71,17 +60,19 @@ listCreatives <- function(creativeHomeURL = Sys.getenv("CREATIVE_HOME_URL"),
   return(creatives)
 }
 
-#' Scrape Qualtrics Site Intercept intercept ids and names for use in API call
+#' @title Scrape Qualtrics Site Intercept intercept ids and names for use in API call
+#'
+#' @description
 #' Uses legacy UI (not Experience Management)
 #' Currently less flexible than listCreatives() since more selectors are needed for zone nav and they're still hardcoded
 #'
-#' @param interceptHomeURL
-#' @param interceptZoneId
+#' @param interceptHomeURL defaults to .Renviron
+#' @param interceptZoneId defaults to .Renviron
 #'
-#' @return
+#' @return data.frame
 #' @export
 #'
-#' @examples
+#' @examples listIntercepts()
 listIntercepts <- function(interceptHomeURL = Sys.getenv("INTERCEPT_HOME_URL"),
                            interceptZoneId = Sys.getenv("INTERCEPT_ZONE_ID")
                            ) {
@@ -107,7 +98,9 @@ listIntercepts <- function(interceptHomeURL = Sys.getenv("INTERCEPT_HOME_URL"),
   return(intercepts)
   }
 
+
 #' Wrapper for getCreativeStats and getInterceptStats API calls
+#'
 #' https://survey.qualtrics.com/WRAPI/SiteIntercept/docs.php#getInterceptStats_2.4
 #'
 #' @param projectId Intercept ID or Creative ID; appropriate call will be determined from this string
@@ -117,10 +110,11 @@ listIntercepts <- function(interceptHomeURL = Sys.getenv("INTERCEPT_HOME_URL"),
 #' @param dataType Impressions, Clicks
 #' @param interval Hour (default), Day, Month
 #'
-#' @return
+#' @return data.frame
 #' @export
 #'
-#' @examples
+#' @examples getProjectStats(projectId="SI_12345", "2018-01-01", "2018-02-02", dataType="Impressions")
+
 getProjectStats <- function(projectId, startDate, endDate, timeZone="America%2FNew_York", dataType, interval="Hour") {
 
   checkRenviron("QSI_USER")
@@ -129,7 +123,7 @@ getProjectStats <- function(projectId, startDate, endDate, timeZone="America%2FN
   url <- paste0("https://survey.qualtrics.com/WRAPI/SiteIntercept/api.php?API_SELECT=SiteIntercept&Version=2.4&Request=getCreativeStats",
                 "&User=", gsub("@", "%40", Sys.getenv("QSI_USER")),
                 "&Token=", Sys.getenv("QSI_TOKEN"),
-                "&Format=", format,
+                "&Format=JSON",
                 "&CreativeID=", projectId,
                 "&StartDate=", startDate,
                 "&EndDate=", endDate,
@@ -143,4 +137,3 @@ getProjectStats <- function(projectId, startDate, endDate, timeZone="America%2FN
   resp <- fromJSON(url)$Result$Data
   setNames(data.frame(projectId, names(resp), unlist(resp), row.names = NULL, stringsAsFactors = FALSE), c("projectId", "date", dataType))
 }
-
