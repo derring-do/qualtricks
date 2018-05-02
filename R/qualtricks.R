@@ -38,44 +38,32 @@ listProjects <- function(creativeHomeURL = Sys.getenv("CREATIVE_HOME_URL"),
 
   elem <- remDr$findElement(using = "css selector", value = "tr[creatives='creatives']")
 
-  script <- "var creatives = [];
-for(var titles = document.querySelectorAll('span[title]'), i = 0; i < titles.length; i++) {
-var obj = new Object();
-obj.id = titles[i].parentNode.parentNode.id;
-obj.title = titles[i].title;
-obj.type = titles[i].parentNode.nextSibling.nextSibling.title;
-creatives.push(obj);
-}
-return creatives"
+  script <- paste0(readLines(paste0(path.package("qualtricks"), "/scrape_qsi_creative.js"), warn = FALSE), collapse = "\n")
 
-creatives <- remDr$executeScript(script, args = list(elem))
-creatives <<- bind_rows(lapply(creatives, data.frame, stringsAsFactors = FALSE))
+  creatives <- remDr$executeScript(script, args = list(elem))
+  creatives <<- bind_rows(lapply(creatives, data.frame, stringsAsFactors = FALSE))
 
-# GET INTERCEPTS  ############################################################################################
-# New UI doesn't seem to have the IDs yet
+  # GET INTERCEPTS  ############################################################################################
+  # New UI doesn't seem to have the IDs yet
 
-remDr$navigate(interceptHomeURL)
-Sys.sleep(5)
+  remDr$navigate(interceptHomeURL)
+  Sys.sleep(5)
 
-remDr$findElement(using = "css selector", value = "span[id='ButtonInner_ZoneSelector']")$clickElement()
-remDr$findElement(using = "css selector", value = paste0("a[mouseupcallback='SiteInterceptTools.setCurrentZone(", interceptZoneId, ")']"))$clickElement()
-Sys.sleep(5)
+  remDr$findElement(using = "css selector", value = "span[id='ButtonInner_ZoneSelector']")$clickElement()
+  remDr$findElement(using = "css selector", value = paste0("a[mouseupcallback='SiteInterceptTools.setCurrentZone(", interceptZoneId, ")']"))$clickElement()
+  Sys.sleep(5)
 
-elem <- remDr$findElement(using = "css selector", value = "ul[class='ElementList InterceptList']")
+  elem <- remDr$findElement(using = "css selector", value = "ul[class='ElementList InterceptList']")
 
-# Source this from another file so can change as needed
-script <- "var intercepts = [];
-for(var titles = document.querySelectorAll(\"li[class='Element Intercept']\"), i = 0; i < titles.length; i++) {
-var obj = new Object();
-obj.status = titles[i].children[0].title;
-obj.title = titles[i].children[1].title;
-intercepts.push(obj);
-}
-return intercepts"
+  # Source this from another file so can change as needed
+  script <- paste0(readLines(paste0(path.package("qualtricks"), "/scrape_qsi_intercept.js"), warn = FALSE), collapse = "\n")
 
-intercepts <- remDr$executeScript(script, args = list(elem))
-intercepts <<- bind_rows(lapply(intercepts, data.frame, stringsAsFactors = FALSE)) %>% separate("title", into =c("title", "id"), " - SI_") %>% mutate(id = paste0("SI_", id))
-}
+  intercepts <- remDr$executeScript(script, args = list(elem))
+  intercepts <<- bind_rows(lapply(intercepts, data.frame, stringsAsFactors = FALSE)) %>% separate("title", into =c("title", "id"), " - SI_") %>% mutate(id = paste0("SI_", id))
+
+  remDr$close()
+  rD$server$stop()
+  }
 
 #' Wrapper for getCreativeStats and getInterceptStats API calls
 #'
