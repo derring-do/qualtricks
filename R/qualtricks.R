@@ -134,6 +134,7 @@ getProjectStats <- function(projectId, startDate, endDate, timeZone="America%2FN
     url <- gsub("CreativeID", "InterceptID", url)
     url <- gsub("getCreativeStats", "getInterceptStats", url)
   }
+  message(url)
   resp <- fromJSON(url)$Result$Data
   setNames(data.frame(projectId, names(resp), unlist(resp), row.names = NULL, stringsAsFactors = FALSE), c("projectId", "date", dataType))
 }
