@@ -1,6 +1,6 @@
 #' Start a selenium server and browser with or without Docker
 #'
-#' @return Opens empty browser window
+#' @return Opens empty browser window asdf
 #' @export
 #'
 #' @examples
