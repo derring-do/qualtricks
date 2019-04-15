@@ -1,4 +1,4 @@
 # qualtricks
-Packaged convenience functions for Qualtrics Site Intercept API
+Packaged convenience functions for Qualtrics Site Intercept (Website/App Feedback) API
 
 WIP
