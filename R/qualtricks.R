@@ -138,3 +138,55 @@ getProjectStats <- function(projectId, startDate, endDate, timeZone="America%2FN
   resp <- fromJSON(url)$Result$Data
   setNames(data.frame(projectId, names(resp), unlist(resp), row.names = NULL, stringsAsFactors = FALSE), c("projectId", "date", dataType))
 }
+
+#' Get users
+#'
+#' @return raw payload
+#' @export
+#'
+#' @examples
+#' listUsers() %>% content %>% {.$result$elements} %>% map("email") %>% unlist
+listUsers <- function() {
+  checkRenviron("QSI_TOKEN")
+  checkRenviron("QUALTRICS_DATACENTERID")
+
+  r <- GET(url = paste0("https://", Sys.getenv("QUALTRICS_DATACENTERID"), "/API/v3/users"),
+           add_headers("X-API-TOKEN" = Sys.getenv("QSI_TOKEN"))
+           )
+
+  return(r)
+}
+
+#' Update Survey
+#'
+#' @return raw payload
+#' @export
+#'
+#' @examples
+#' head(all_surveys())
+#' updateSurvey(surveyId, isActive=FALSE)
+#' head(all_surveys())
+updateSurvey <- function(surveyId, name=NULL, isActive=c(TRUE, FALSE), expirationStartDate=NULL, expirationEndDate=NULL) {
+  checkRenviron("QSI_TOKEN")
+  checkRenviron("QUALTRICS_DATACENTERID")
+
+  url <- paste0("https://", Sys.getenv("QUALTRICS_DATACENTERID"), "/API/v3/surveys/", surveyId)
+  data <- list()
+
+  if(!is.null(name)) {
+    data <- append(data, c(name=name))
+  }
+
+  if(!is.null(isActive)) {
+    data <- append(data, c(isActive=isActive))
+  }
+
+  PUT(url = url,
+      add_headers(
+        "Content-Type" = "application/json",
+        "X-API-TOKEN" = Sys.getenv("QSI_TOKEN")
+        ),
+      body = data,
+      encode = "json"
+      )
+}
