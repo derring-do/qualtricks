@@ -1,0 +1,92 @@
+---
+title: "qualtricks"
+author: "Launchpad McQuack"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+WIP
+supplements/piggybacks https://github.com/ropensci/qualtRics with usermanagement stuff and site intercept stuff
+too lazy for PR
+
+# Installation
+
+```{r}
+devtools::install_github()
+```
+
+# Register your credentials using qualtricsR package
+
+QUALTRICS_DATACENTERID / baseurl
+QSI_TOKEN / api key
+
+```{r}
+library(qualtRics)
+
+qualtrics_api_credentials(api_key = "<YOUR-QUALTRICS_API_KEY>", 
+                          base_url = "<YOUR-QUALTRICS_BASE_URL>",
+                          install = TRUE)
+```
+
+if you're using site intercept api calls like listcreatives, you'll need to additionally register in renviron
+
+```{r}
+
+```
+
+# Use qualtricsR for the survey stuff
+```{r}
+qualtrics_api_credentials(api_key = Sys.getenv("QSI_TOKEN"),
+                          base_url = "https://hbp.az1.qualtrics.com",
+                          install = TRUE,
+                          overwrite = TRUE)
+readRenviron("~/.Renviron")
+
+surveys <- all_surveys() 
+recievingUser <- listUsers() %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements %>% filter(firstName == "Arunima") %>% pull(id)
+
+surveys.of.interest$id %>% map(., function(.) shareSurvey(userId = recievingUser, surveyId = .))
+
+```
+
+# Access your Qualtrics User Data
+```{r}
+library(httr)
+library(dplyr)
+library(jsonlite)
+
+listUsers(responseOnly=TRUE) 
+listUsers(responseOnly=FALSE) %>% names
+```
+
+# Share surveys
+```{r}
+
+shareSurvey(surveyId = "SV_asdf", userId = "UR_asdf")
+```
+
+# Update/deactivate
+
+```{r}
+```
+
+# Get Intercept stats
+
+tbd 
+need to scrape ids first because api doesn't provide listCreativeIds or anything
+
+```{r}
+projects <- listInterceptsAndCreatives()
+getProjectStats(projectId=projects$id[1], Sys.Date()-365, Sys.Date(), dataType = "Impressions", interval="Month")
+```
