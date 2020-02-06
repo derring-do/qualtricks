@@ -1,7 +1,7 @@
 Package: qualtricks
 Title: Convenience Functions for Qualtrics Site Intercept API
 Version: 0.0.0.9000
-Authors@R: person("Amanda", "Ludden", email = "", role = c("aut", "cre"))
+Authors@R: person("Amanda", "Ludden", email = "asdf@asdf.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 Depends: R (>= 3.4.3),
   dplyr,
@@ -12,4 +12,8 @@ Depends: R (>= 3.4.3),
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

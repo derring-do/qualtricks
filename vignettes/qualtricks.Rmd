@@ -15,78 +15,76 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
+- WIP
+- supplements/piggybacks https://github.com/ropensci/qualtRics with user management stuff and site intercept stuff
 
-WIP
-supplements/piggybacks https://github.com/ropensci/qualtRics with usermanagement stuff and site intercept stuff
-too lazy for PR
-
-# Installation
-
-```{r}
-devtools::install_github()
+## Installation
+```{r, eval=FALSE}
+devtools::install_github("derring-do/qualtricks")
 ```
+* Optional: set up keys, urls, etc. in .Renviron
 
+## Usage
+```{r}
 # Register your credentials using qualtricsR package
-
-QUALTRICS_DATACENTERID / baseurl
-QSI_TOKEN / api key
-
-```{r}
 library(qualtRics)
-
-qualtrics_api_credentials(api_key = "<YOUR-QUALTRICS_API_KEY>", 
-                          base_url = "<YOUR-QUALTRICS_BASE_URL>",
-                          install = TRUE)
-```
-
-if you're using site intercept api calls like listcreatives, you'll need to additionally register in renviron
-
-```{r}
-
-```
-
-# Use qualtricsR for the survey stuff
-```{r}
 qualtrics_api_credentials(api_key = Sys.getenv("QSI_TOKEN"),
-                          base_url = "https://hbp.az1.qualtrics.com",
+                          base_url = Sys.getenv("QUALTRICS_BASE_URL"),
                           install = TRUE,
                           overwrite = TRUE)
-readRenviron("~/.Renviron")
-
-surveys <- all_surveys() 
-recievingUser <- listUsers() %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements %>% filter(firstName == "Arunima") %>% pull(id)
-
-surveys.of.interest$id %>% map(., function(.) shareSurvey(userId = recievingUser, surveyId = .))
-
-```
-
-# Access your Qualtrics User Data
-```{r}
-library(httr)
+library(qualtricks)
 library(dplyr)
-library(jsonlite)
-
-listUsers(responseOnly=TRUE) 
-listUsers(responseOnly=FALSE) %>% names
 ```
 
-# Share surveys
+### Use qualtricsR for survey info
+
+```{r, eval=FALSE}
+# Get all survey names ----
+surveys <- qualtRics::all_surveys()
+
+head(surveys)
+
+# Get all survey response counts ----
+response_tables <- vector(mode = "list", length=nrow(surveys))
+
+for(i in 1:length(response_tables)) {
+  counts <- try(metadata(surveys$id[i], get=list(questions=FALSE, flow=FALSE, metadata=FALSE, responsecounts=TRUE))$responsecounts, silent=TRUE)
+  if(class(counts) == "try-error") next
+  counts$id = surveys$id[i]
+  response_tables[[i]] <- counts
+  message(i)
+}
+
+head(data.table::rbindlist(response_tables))
+```
+### Use qualtricks for user/admin operations and intercept stats
 ```{r}
+library(qualtricks)
+library(data.table)
 
-shareSurvey(surveyId = "SV_asdf", userId = "UR_asdf")
+# Organization info ---
+getOrganization(organizationId=Sys.getenv("QUALTRICS_ORG_ID")) %>% names
+
+# List all users ----
+# listUsers(responseOnly=TRUE) # returns pre-processed HTTP response
+listUsers(responseOnly=FALSE, offset = 100) %>% names
+
+users <- lapply(seq(0,600,100), function(x) { listUsers(offset=x) }) %>% rbindlist
+names(users)
+
+# Get Intercept stats ----
+# Need to scrape project IDs from UI because there's no API call to retrieve them
+getProjectStats(projectId="SI_8iR8HS1JUSjlC85", Sys.Date()-365, Sys.Date(), dataType = "Impressions", interval="Month") %>% names
 ```
 
-# Update/deactivate
+### Use qualtRics + qualtRics for user- and org-informed survey operations
+```{r, eval=FALSE}
+# Share surveys ----
+receivingUser <- users$id[users$lastName=="Smith"][1] 
+surveys$id[1:3] %>% purrr::map(., function(.) shareSurvey(userId = receivingUser, surveyId = .))
 
-```{r}
+# Update surveys ----
+# e.g. deactivate, rename
+# TBD
 ```
 
-# Get Intercept stats
-
-tbd 
-need to scrape ids first because api doesn't provide listCreativeIds or anything
-
-```{r}
-projects <- listInterceptsAndCreatives()
-getProjectStats(projectId=projects$id[1], Sys.Date()-365, Sys.Date(), dataType = "Impressions", interval="Month")
-```

@@ -18,6 +18,7 @@ listUsers <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
                       yourapitoken = Sys.getenv("QSI_TOKEN"),
                       offset = 0,
                       responseOnly = FALSE) {
+
   r <- GET(url = glue::glue("https://{yourdatacenterid}/API/v3/users"),
            query = list(offset = offset),
            add_headers("X-API-TOKEN" = yourapitoken))
