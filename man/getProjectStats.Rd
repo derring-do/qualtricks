@@ -4,10 +4,14 @@
 \alias{getProjectStats}
 \title{Wrapper for getCreativeStats and getInterceptStats API calls}
 \usage{
-getProjectStats(projectId, startDate, endDate,
+getProjectStats(
+  projectId,
+  startDate,
+  endDate,
   timeZone = "America\%2FNew_York",
-  dataType = c("Impressions, Clicks"), interval = c("Hour", "Day",
-  "Month"))
+  dataType = c("Impressions, Clicks"),
+  interval = c("Hour", "Day", "Month")
+)
 }
 \arguments{
 \item{projectId}{Intercept ID or Creative ID; appropriate call will be determined from this string}

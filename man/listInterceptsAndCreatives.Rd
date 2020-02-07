@@ -4,9 +4,11 @@
 \alias{listInterceptsAndCreatives}
 \title{List Intercepts and Creatives}
 \usage{
-
-  listInterceptsAndCreatives(summaryReportURL = Sys.getenv("QUALTRICS_SUMMARY_REPORT_URL"),
-  pageScript = "var c = [];\\n                                   document.querySelectorAll(\\"table.StatsTable tbody tr td:nth-of-type(1) a\\").forEach(function(x) {c.push(x.getAttribute(\\"clickcallback\\"))})\\n                                   return c")
+listInterceptsAndCreatives(
+  summaryReportURL = Sys.getenv("QUALTRICS_SUMMARY_REPORT_URL"),
+ 
+    pageScript = "var c = [];\\n                                   document.querySelectorAll(\\"table.StatsTable tbody tr td:nth-of-type(1) a\\").forEach(function(x) {c.push(x.getAttribute(\\"clickcallback\\"))})\\n                                   return c"
+)
 }
 \arguments{
 \item{summaryReportURL}{String. URL for license summary report}
@@ -21,7 +23,7 @@ Scrape intercept and creative ids and names from admin Summary Report page for u
 Uses RSelenium to open and scrape Chrome
 }
 \examples{
-#' \dontrun{
+\dontrun{
 listInterceptsAndCreatives()
 }
 }

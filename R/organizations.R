@@ -4,14 +4,15 @@
 #'
 #' @param yourdatacenterid Set in .Renviron
 #' @param yourapitoken Set in .Renviron
+#' @param organizationId Set in .Renviron or elsewhere
 #'
 #' @return data.frame
 #' @import httr glue jsonlite
-#' @export
 #'
 #' @examples
 #' \dontrun{
 #' getOrganization(organizationId="hbp")
+#' }
 getOrganization <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
                       yourapitoken = Sys.getenv("QSI_TOKEN"),
                       organizationId

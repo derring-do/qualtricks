@@ -6,6 +6,11 @@
 \usage{
 startSelServer(browser = "chrome", useDocker = FALSE)
 }
+\arguments{
+\item{browser}{defaults to chrome}
+
+\item{useDocker}{probably don't need this}
+}
 \value{
 remDr
 }

@@ -3,27 +3,35 @@
 \name{listUsers}
 \alias{listUsers}
 \title{List Users
-https://api.qualtrics.com/reference/list-users}
+https://api.qualtrics.com/docs/managing-users#list-users}
 \usage{
-listUsers(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
-  yourapitoken = Sys.getenv("QSI_TOKEN"), responseOnly = FALSE)
+listUsers(
+  yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
+  yourapitoken = Sys.getenv("QSI_TOKEN"),
+  offset = 0,
+  responseOnly = FALSE
+)
 }
 \arguments{
 \item{yourdatacenterid}{Set in .Renviron}
 
 \item{yourapitoken}{Set in .Renviron}
 
+\item{offset}{paging, defaults to 0 (first page only)}
+
 \item{responseOnly}{Return response() object only? Defaults to FALSE.}
 }
 \value{
-Response
+Response or data.frame
 }
 \description{
 List Users
-https://api.qualtrics.com/reference/list-users
+https://api.qualtrics.com/docs/managing-users#list-users
 }
 \examples{
 \dontrun{
 listUsers()
+listUsers(offset=100)
+lapply(seq(0,600,100), function(x) { listUsers(offset=x) }) \%>\% rbindlist
 }
 }

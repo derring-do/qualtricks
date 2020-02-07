@@ -41,7 +41,7 @@ qualtricsLogin <- function() {
 #' @import RSelenium dplyr
 #'
 #' @examples
-#' #' \dontrun{
+#' \dontrun{
 #' listInterceptsAndCreatives()
 #' }
 

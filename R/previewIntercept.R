@@ -1,10 +1,10 @@
 #' Start a selenium server and browser with or without Docker
 #'
+#' @param browser defaults to chrome
+#' @param useDocker probably don't need this
+#'
 #' @return remDr
 #' @import RSelenium
-#' @export
-#'
-#' @examples
 startSelServer <- function(browser = "chrome", useDocker = FALSE) {
   if(useDocker == TRUE) {
     userDocker <<- TRUE  # for later stop
@@ -20,13 +20,10 @@ startSelServer <- function(browser = "chrome", useDocker = FALSE) {
   }
 }
 
-#' Title
+#' Stop Selenium server
 #'
-#' @return
-#' @export
-#'
-#' @examples
-stopSelServer <- function(userDocker = useDocker) {
+#' @param useDocker ?
+stopSelServer <- function(useDocker = useDocker) {
   if(useDocker == TRUE) {
     remDr$close()
     shell(paste("docker kill", gsub(" ", "", strsplit(shell("docker ps -a", intern = TRUE)[2], "selenium")[[1]][1])))
@@ -37,12 +34,9 @@ stopSelServer <- function(userDocker = useDocker) {
 
 #' Format JavaScript bookmarklet that triggers Qualtrics Intercept Edit Preview
 #'
-#' @param interceptId
-#'
+#' @param interceptId string
+#' @param zoneURL string
 #' @return character
-#' @export
-#'
-#' @examples
 formatInterceptBookmarklet <- function(interceptId, zoneURL = Sys.getenv("QSI_ZONE_URL")) {
 
   script <- "var id='INTERCEPT_ID';

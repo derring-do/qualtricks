@@ -3,6 +3,7 @@
 #'
 #' @param yourdatacenterid Set in .Renviron
 #' @param yourapitoken Set in .Renviron
+#' @param offset paging, defaults to 0 (first page only)
 #' @param responseOnly Return response() object only? Defaults to FALSE.
 #'
 #' @return Response or data.frame
@@ -14,6 +15,7 @@
 #' listUsers()
 #' listUsers(offset=100)
 #' lapply(seq(0,600,100), function(x) { listUsers(offset=x) }) %>% rbindlist
+#' }
 listUsers <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
                       yourapitoken = Sys.getenv("QSI_TOKEN"),
                       offset = 0,

@@ -2,10 +2,13 @@
 % Please edit documentation in R/previewIntercept.R
 \name{stopSelServer}
 \alias{stopSelServer}
-\title{Title}
+\title{Stop Selenium server}
 \usage{
-stopSelServer(userDocker = useDocker)
+stopSelServer(useDocker = useDocker)
+}
+\arguments{
+\item{useDocker}{?}
 }
 \description{
-Title
+Stop Selenium server
 }

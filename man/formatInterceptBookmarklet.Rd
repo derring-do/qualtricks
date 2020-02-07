@@ -4,11 +4,12 @@
 \alias{formatInterceptBookmarklet}
 \title{Format JavaScript bookmarklet that triggers Qualtrics Intercept Edit Preview}
 \usage{
-formatInterceptBookmarklet(interceptId,
-  zoneURL = Sys.getenv("QSI_ZONE_URL"))
+formatInterceptBookmarklet(interceptId, zoneURL = Sys.getenv("QSI_ZONE_URL"))
 }
 \arguments{
-\item{interceptId}{}
+\item{interceptId}{string}
+
+\item{zoneURL}{string}
 }
 \value{
 character

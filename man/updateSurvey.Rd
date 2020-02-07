@@ -4,9 +4,15 @@
 \alias{updateSurvey}
 \title{Update Survey}
 \usage{
-updateSurvey(surveyId, name = NULL, isActive = c(TRUE, FALSE),
-  expirationStartDate = NULL, expirationEndDate = NULL,
-  ownerID = NULL, yourapitoken = Sys.getenv("QSI_TOKEN"))
+updateSurvey(
+  surveyId,
+  name = NULL,
+  isActive = c(TRUE, FALSE),
+  expirationStartDate = NULL,
+  expirationEndDate = NULL,
+  ownerID = NULL,
+  yourapitoken = Sys.getenv("QSI_TOKEN")
+)
 }
 \arguments{
 \item{surveyId}{String. Survey ID}
