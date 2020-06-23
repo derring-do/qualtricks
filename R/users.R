@@ -31,3 +31,45 @@ listUsers <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
     return(r %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements)
   }
 }
+
+#' Get User API Token
+#'
+#' @param userId
+#' @param yourdatacenterid
+#' @param yourapitoken
+#'
+#' @return the api token or error message if token already exists
+#' @export
+#'
+#' @examples
+#' getUserAPIToken("")
+getUserAPIToken <- function(userId,
+                            yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
+                            yourapitoken = Sys.getenv("QSI_TOKEN")) {
+  r <- GET(url = paste0("https://", yourdatacenterid, "/API/v3/users/", userId, "/apitoken"),
+           add_headers("X-API-TOKEN" = yourapitoken)
+  )
+  return(content(r)$result)
+}
+
+#' Create User API Token
+#'
+#' @param userId
+#' @param yourdatacenterid
+#' @param yourapitoken
+#'
+#' @return response
+#' @export
+#'
+#' @examples
+#' createUserAPIToken("")
+createUserAPIToken <- function(userId,
+                               yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
+                               yourapitoken = Sys.getenv("QSI_TOKEN")) {
+  r <- POST(url = paste0("https://", yourdatacenterid, "/API/v3/users/", userId, "/apitoken"),
+            add_headers("X-API-TOKEN" = yourapitoken)
+  )
+  return(r)
+  # returns error if token already generated
+}
+
