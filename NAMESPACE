@@ -3,6 +3,7 @@
 export(createUserAPIToken)
 export(getProjectStats)
 export(getUserAPIToken)
+export(listAllSurveys)
 export(listInterceptsAndCreatives)
 export(listSurveys)
 export(listUsers)

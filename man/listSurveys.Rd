@@ -28,3 +28,13 @@ Response or data.frame
 List Surveys
 https://api.qualtrics.com/guides/reference/surveys.json/paths/~1surveys/get
 }
+\examples{
+\dontrun{
+a <- listSurveys()
+listSurveys(responseOnly=TRUE)
+a
+dim(a)
+b <- lapply(seq(0,1000,100), function(x) { listSurveys(offset=x) }) \%>\% bind_rows
+dim(b)
+}
+}

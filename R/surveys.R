@@ -13,6 +13,7 @@
 #' @examples
 #' \dontrun{
 #' a <- listSurveys()
+#' listSurveys(responseOnly=TRUE)
 #' a
 #' dim(a)
 #' b <- lapply(seq(0,1000,100), function(x) { listSurveys(offset=x) }) %>% bind_rows
@@ -33,3 +34,31 @@ listSurveys <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
     return(r %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements)
   }
 }
+
+#' List All Surveys
+#'
+#' @param ... args for listSurveys
+#'
+#' @description like listSurveys but does the pagination
+#' @return
+#' @export
+#'
+#' @examples
+#' listAllSurveys()
+listAllSurveys <- function(...) {
+  resp <- listSurveys(responseOnly = TRUE)
+  master <- c()
+
+  master <- append(master, list(listSurveys()))
+
+  while (!is.null(content(resp)$result$nextPage)) {
+    # Send GET request to list all surveys
+    offset <- strsplit(content(resp)$result$nextPage, "offset=")[[1]][2]
+    resp <- listSurveys(offset=offset, responseOnly=TRUE)
+    # Append results
+    master <- append(master, list(resp%>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements))
+  }
+
+  return(bind_rows(master))
+}
+
