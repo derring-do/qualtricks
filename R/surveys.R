@@ -49,14 +49,14 @@ listAllSurveys <- function(...) {
   resp <- listSurveys(responseOnly = TRUE)
   master <- c()
 
-  master <- append(master, list(listSurveys()))
+  master <- append(master, list(listSurveys(...)))
 
   while (!is.null(content(resp)$result$nextPage)) {
     # Send GET request to list all surveys
     offset <- strsplit(content(resp)$result$nextPage, "offset=")[[1]][2]
-    resp <- listSurveys(offset=offset, responseOnly=TRUE)
+    resp <- listSurveys(..., offset=offset, responseOnly=TRUE)
     # Append results
-    master <- append(master, list(resp%>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements))
+    master <- append(master, list(resp %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements))
   }
 
   return(bind_rows(master))
