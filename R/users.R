@@ -32,6 +32,33 @@ listUsers <- function(yourdatacenterid = Sys.getenv("QUALTRICS_DATACENTERID"),
   }
 }
 
+#' List all users
+#' @description like listUsers but does pagination
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' listAllUsers()
+
+listAllUsers <- function(...) {
+  resp <- listUsers(responseOnly = TRUE)
+  master <- c()
+
+  master <- append(master, list(listUsers()))
+
+  while (!is.null(content(resp)$result$nextPage)) {
+    # Send GET request to list all surveys
+    offset <- strsplit(content(resp)$result$nextPage, "offset=")[[1]][2]
+    resp <- listUsers(offset=offset, responseOnly=TRUE)
+    # Append results
+    master <- append(master, list(resp %>% content("text") %>% fromJSON(simplifyVector = FALSE, simplifyDataFrame = TRUE) %>% .$result %>% .$elements))
+  }
+
+  return(bind_rows(master))
+}
+
 #' Get User API Token
 #'
 #' @param userId
