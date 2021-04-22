@@ -20,11 +20,29 @@ rules = document.querySelectorAll("td[class*=Col_PermissionName]")
 table = [];
 
 for(i = 0; i < rules.length; i++) {
-    tab = rules[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentElement.parentElement.parentElement.parentElement.id
-    table[i] = tab + ": " + rules[i].id.replace("PermissionLabel-", "") + ": " + rules[i].innerText.replace(/\r?\n|\r/g, "").replace(/\s\s+/g, "")
+    tabName = rules[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentElement.parentElement.parentElement.parentElement.id; // eg "GeneralSection"
+    tabSection = rules[i].id.replace("PermissionLabel-", ""); // eg "Project Permissions"
+    itemName = rules[i].innerText.replace(/\r?\n|\r/g, "").replace(/\s\s+/g, ""); //eg "Brand Experience"
+
+if(tabSection.match("Restriction") == null) {
+    itemEnabled = rules[i].parentNode.querySelectorAll("a")[0].className + rules[i].parentNode.querySelectorAll("a")[0].title;
+    itemEnabled = itemEnabled.replace("Checkbox EnabledUnchecked", "").replace("Enables this permission", "").replace("Checkbox EnabledUnused", "");
+    itemDisabled = rules[i].parentNode.querySelectorAll("a")[1].className + rules[i].parentNode.querySelectorAll("a")[1].title;
+    itemDisabled = itemDisabled.replace("Checkbox DisabledUnchecked", "").replace("Disables this permission", "").replace("Checkbox DisabledUnused", "");
+
+} else {
+    if(rules[i].parentNode.querySelector("span.Hidden") != null) {
+        itemEnabled = rules[i].parentNode.querySelector("input") .value;
+    } else {
+        itemEnabled = "unlimited";
+    }
+    itemDisabled = null;
+}
+    table[i] = tabName + "|" + tabSection + "|" + itemName + "|" + itemEnabled + "|" + itemDisabled;
+
 }
 
-table.join("\n"); // generates the profiles.xlsx
+table.join("\n"); // paste into excel or something
 ```
 
 ### Version control intercepts as code (Chrome)
