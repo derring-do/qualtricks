@@ -20,3 +20,5 @@ WIP
 1. In console, run copy(temp1)
 1. Paste into a text editor and save file, save file to Git repo. Name file after intercept ID, e.g., SI_abc123.json
 1. Optionally: print the editor page as a PDF (landscape), e.g., SI_abc123.pdf
+
+![]("https://imgur.com/a/2reQK9D")
