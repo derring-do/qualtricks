@@ -44,11 +44,12 @@ You can also push this payload via fetch in the console
   },
   "referrer": "https://abc.az1.qualtrics.com/DX/InterceptsSection/EditIntercept?ContextIntercept=SI_abc123&ContextZone=ZN_abc123",
   "referrerPolicy": "strict-origin-when-cross-origin",
-  "body": "your payload here"
+  "body": "Definition=%7B%22Status%22%3A%22Active%22%2C%22Edited%22%3Atrue%2C%22ZoneID%22%3A%abc123..."
   "method": "POST",
   "mode": "cors",
   "credentials": "include"
 });
   ```
+  3. Replace everything after "Definition=" in the body value with the relevant intercept payload from above and run in the browser console.
 
 ![saveIntercept screenshot](https://i.imgur.com/eSSO6ES.png)
