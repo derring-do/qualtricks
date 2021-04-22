@@ -10,7 +10,24 @@ WIP
 
 ## Tips 
 
-### How to version control intercept as code (Chrome)
+### Brand Admin utilities
+
+1. List Qualtrics User Type Permissions from Admin Panel
+
+```{javascript}
+rules = document.querySelectorAll("td[class*=Col_PermissionName]")
+
+table = [];
+
+for(i = 0; i < rules.length; i++) {
+    tab = rules[i].parentNode.parentNode.parentNode.parentNode.parentNode.parentElement.parentElement.parentElement.parentElement.id
+    table[i] = tab + ": " + rules[i].id.replace("PermissionLabel-", "") + ": " + rules[i].innerText.replace(/\r?\n|\r/g, "").replace(/\s\s+/g, "")
+}
+
+table.join("\n"); // generates the profiles.xlsx
+```
+
+### Version control intercepts as code (Chrome)
 
 1. Go to any intercept project's editor (doesn't matter which, you'll get all projects within the zone)
 1. Open browser developer tools
